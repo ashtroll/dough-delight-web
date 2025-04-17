@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBag, Menu, X } from "lucide-react";
@@ -9,7 +8,7 @@ const Navbar = () => {
   
   return (
     <header className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-      <div className="bg-white/80 backdrop-blur-md rounded-full shadow-lg px-6 py-3">
+      <div className="bg-white/10 backdrop-blur-md rounded-full shadow-lg px-6 py-3">
         <div className="container mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <h1 className="text-xl md:text-2xl font-bold text-bakery-800">
@@ -64,7 +63,7 @@ const Navbar = () => {
       
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white/80 backdrop-blur-md rounded-2xl shadow-lg mt-2 overflow-hidden">
+        <div className="md:hidden bg-white/10 backdrop-blur-md rounded-2xl shadow-lg mt-2 overflow-hidden">
           <div className="container mx-auto py-4 flex flex-col gap-4">
             <Link 
               to="/" 
