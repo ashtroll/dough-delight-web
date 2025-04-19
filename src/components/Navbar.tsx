@@ -1,10 +1,29 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+      });
+    } else {
+      navigate('/');
+    }
+  };
   
   return (
     <header className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
@@ -16,7 +35,6 @@ const Navbar = () => {
             </h1>
           </Link>
           
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/" className="font-medium text-foreground hover:text-primary transition-colors">
               Home
@@ -39,10 +57,13 @@ const Navbar = () => {
                 0
               </span>
             </Button>
-            <Button className="bg-bakery-500 hover:bg-bakery-600">Order Now</Button>
+            {user ? (
+              <Button onClick={handleLogout} variant="outline">Sign Out</Button>
+            ) : (
+              <Button onClick={() => navigate('/auth')} className="bg-bakery-500 hover:bg-bakery-600">Sign In</Button>
+            )}
           </div>
           
-          {/* Mobile Navigation */}
           <div className="flex items-center md:hidden gap-4">
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-5 w-5" />
@@ -61,7 +82,6 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white/10 backdrop-blur-md rounded-2xl shadow-lg mt-2 overflow-hidden">
           <div className="container mx-auto py-4 flex flex-col gap-4">
@@ -93,7 +113,21 @@ const Navbar = () => {
             >
               Contact
             </Link>
-            <Button className="bg-bakery-500 hover:bg-bakery-600 mt-2">Order Now</Button>
+            {user ? (
+              <Button onClick={handleLogout} variant="outline" className="w-full">
+                Sign Out
+              </Button>
+            ) : (
+              <Button 
+                onClick={() => {
+                  navigate('/auth');
+                  setIsMenuOpen(false);
+                }}
+                className="bg-bakery-500 hover:bg-bakery-600 w-full"
+              >
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       )}
